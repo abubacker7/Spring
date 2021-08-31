@@ -4,5 +4,16 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password: password
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/learning
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: transvelo
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        generate-ddl: true
+        ddl-auto: create
+        format_sql: true

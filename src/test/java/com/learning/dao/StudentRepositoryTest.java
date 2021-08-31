@@ -19,13 +19,11 @@ class StudentRepositoryTest {
     StudentRepository studentRepository;
 
     @Test
-    void testInsert(){
+    void testInsert() {
         assertTrue(studentRepository.findAll().size() == 0);
         studentRepository.save(new Student(1, "Abu"));
         assertTrue(studentRepository.findAll().size() == 1);
         assertTrue(studentRepository.findById(1).isPresent());
         assertTrue(studentRepository.findById(1).get().getName().equalsIgnoreCase("abu") );
-
     }
-
 }

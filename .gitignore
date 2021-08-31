@@ -1,7 +1,7 @@
 #Unwanted Folders & Files
 
-target
 .idea
+target
 Learning.iml
 .DS_Store
 src/.DS_Store
