@@ -1,6 +1,7 @@
 package com.learning.dao;
 
 import com.learning.model.Student;
+import com.learning.model.StudentAddress;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,25 @@ class StudentRepositoryTest {
 
     @Test
     void testInsert() {
+        Student student = new Student();
+        student.setRollNo(234L);
+        student.setName("john");
+        student.setAge(30);
+        student.setGender("male");
+        student.setDob("24/08/1990");
+
+        StudentAddress studentAddress = new StudentAddress();
+        studentAddress.setId(123L);
+        studentAddress.setStreet("23, Antony Street");
+        studentAddress.setDistrict("madurai");
+        studentAddress.setState("tamil nadu");
+        studentAddress.setCountry("india");
+
+        student.setStudentAddress(studentAddress);
+        studentAddress.setStudent(student);
+
         assertTrue(studentRepository.findAll().size() == 0);
-        studentRepository.save(new Student(1, "Abu"));
+        studentRepository.save(student);
         assertTrue(studentRepository.findAll().size() == 1);
-        assertTrue(studentRepository.findById(1).isPresent());
-        assertTrue(studentRepository.findById(1).get().getName().equalsIgnoreCase("abu") );
     }
 }

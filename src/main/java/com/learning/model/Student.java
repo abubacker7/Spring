@@ -1,27 +1,49 @@
 package com.learning.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "student")
 public class Student {
-
     @Id
-    Integer id;
+    @Column(name = "roll_no")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long rollNo;
 
-    String name;
+    @Column(name = "name")
+    private String name;
 
-    public Student(Integer id, String name) {
-        this.id = id;
+    @Column(name = "age")
+    private int age;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "dob")
+    private String dob;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sudent_address_id")
+    private StudentAddress studentAddress;
+
+    public Student() {
+    }
+
+    public Student(Long rollNo, String name, int age, String gender, String dob, StudentAddress studentAddress) {
+        this.rollNo = rollNo;
         this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.dob = dob;
+        this.studentAddress = studentAddress;
     }
 
-    public Integer getId() {
-        return id;
+    public Long getRollNo() {
+        return rollNo;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setRollNo(Long rollNo) {
+        this.rollNo = rollNo;
     }
 
     public String getName() {
@@ -32,7 +54,35 @@ public class Student {
         this.name = name;
     }
 
-    public Student() {
+    public int getAge() {
+        return age;
+    }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public StudentAddress getStudentAddress() {
+        return studentAddress;
+    }
+
+    public void setStudentAddress(StudentAddress studentAddress) {
+        this.studentAddress = studentAddress;
     }
 }

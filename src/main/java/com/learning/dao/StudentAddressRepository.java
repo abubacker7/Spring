@@ -1,10 +1,10 @@
 package com.learning.dao;
 
-import com.learning.model.Student;
+import com.learning.model.StudentAddress;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface StudentRepository extends JpaRepository<Student, Long>{
+public interface StudentAddressRepository extends JpaRepository<StudentAddress, Long> {
 
 }
