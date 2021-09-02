@@ -1,7 +1,17 @@
 package com.learning.model;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "student")
 public class Student {
@@ -10,79 +20,19 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long rollNo;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "age")
+    @Column(name = "age", nullable = false, length = 10)
     private int age;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false, length = 10)
     private String gender;
 
-    @Column(name = "dob")
-    private String dob;
+    @Column(name = "dob", nullable = false, length = 50)
+    private LocalDate dob;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sudent_address_id")
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private StudentAddress studentAddress;
-
-    public Student() {
-    }
-
-    public Student(Long rollNo, String name, int age, String gender, String dob, StudentAddress studentAddress) {
-        this.rollNo = rollNo;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.dob = dob;
-        this.studentAddress = studentAddress;
-    }
-
-    public Long getRollNo() {
-        return rollNo;
-    }
-
-    public void setRollNo(Long rollNo) {
-        this.rollNo = rollNo;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public StudentAddress getStudentAddress() {
-        return studentAddress;
-    }
-
-    public void setStudentAddress(StudentAddress studentAddress) {
-        this.studentAddress = studentAddress;
-    }
 }

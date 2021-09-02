@@ -1,7 +1,16 @@
 package com.learning.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "student_address")
 public class StudentAddress {
@@ -11,78 +20,23 @@ public class StudentAddress {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long addressId;
 
-    @Column(name = "street")
+    @Column(name = "flat_no", nullable = false, length = 10)
+    private Integer flatNo;
+
+    @Column(name = "street", nullable = false, length = 100)
     private String street;
 
-    @Column(name = "district")
+    @Column(name = "district", nullable = false, length = 10)
     private String district;
 
-    @Column(name = "state")
+    @Column(name = "state", nullable = false, length = 20)
     private String state;
 
-    @Column(name = "country")
+    @Column(name = "country", nullable = false, length = 50)
     private String country;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "studentAddress")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "address_id")
     private Student student;
-
-    public StudentAddress() {
-    }
-
-    public StudentAddress(Long addressId, String street, String district, String state, String country, Student student) {
-        this.addressId = addressId;
-        this.street = street;
-        this.district = district;
-        this.state = state;
-        this.country = country;
-        this.student = student;
-    }
-
-    public Long getId() {
-        return addressId;
-    }
-
-    public void setId(Long addressId) {
-        this.addressId = addressId;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
 }
