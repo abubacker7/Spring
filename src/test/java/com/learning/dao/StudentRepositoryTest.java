@@ -2,7 +2,7 @@ package com.learning.dao;
 
 import com.learning.model.Student;
 import com.learning.model.StudentAddress;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class StudentRepositoryTest {
@@ -23,14 +24,19 @@ class StudentRepositoryTest {
     @Autowired
     StudentRepository studentRepository;
 
-    @Test
-    void testInsert() {
+    List<Student> studentList;
+    List<String> studentNameList;
 
-        List<Student> studentList = new ArrayList<>();
+    @BeforeAll
+    void setup() {
+        this.studentList = new ArrayList<>();
 
-        for( int i = 0; i < 3; i++ ) {
+        this.studentNameList = new ArrayList<String>( List.of("john", "ram", "som"));
+
+        int i = 0;
+        for ( String stdName : studentNameList ) {
             Student student = new Student();
-            student.setName("john" + i );
+            student.setName(stdName);
             student.setAge(30 + i);
             student.setGender("male" + i);
             student.setDob(LocalDate.now().plusDays(i));
@@ -45,13 +51,20 @@ class StudentRepositoryTest {
             student.setStudentAddress(studentAddress);
             studentAddress.setStudent(student);
             studentList.add(student);
+            i++;
         }
+    }
+
+    @Test
+    @Order(1)
+    void testInsert() {
 
         assertTrue(studentRepository.findAll().size() == 0);
         studentList.stream().forEach( studentRepository::save );
         assertTrue(studentRepository.findAll().size() == 3);
 
-        for( int i = 0; i < 3; i++ ) {
+        int i = 0;
+        for ( String stdName : studentNameList ) {
             Optional<Student> studentObject = studentRepository.findById(((long) i + 1));
             assertTrue(studentObject.isPresent());
             Student studentResult = studentObject.get();
@@ -65,6 +78,28 @@ class StudentRepositoryTest {
             assertTrue(studentResult.getStudentAddress().getDistrict().equals(studentInputAddress.getDistrict()));
             assertTrue(studentResult.getStudentAddress().getState().equals(studentInputAddress.getState()));
             assertTrue(studentResult.getStudentAddress().getCountry().equals(studentInputAddress.getCountry()));
+            i++;
+        }
+    }
+
+    @Test
+    @Order(2)
+    void testUpdate() {
+        if ( studentList.size() > 1 ) {
+            studentList.get(1).setAge(50);
+            studentRepository.save(studentList.get(1));
+            assertTrue(studentList.get(1).getAge() == 50 );
+        }
+    }
+
+    @Test
+    @Order(3)
+    void testDelete() {
+        boolean isStudentPresent = studentRepository.findById(1L).isPresent();
+        if ( isStudentPresent ) {
+            studentRepository.deleteById(1L);
+        } else {
+            assertTrue(studentRepository.findById(1L).isEmpty());
         }
     }
 }
