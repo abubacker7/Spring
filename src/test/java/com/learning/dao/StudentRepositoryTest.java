@@ -2,10 +2,15 @@ package com.learning.dao;
 
 import com.learning.model.Student;
 import com.learning.model.StudentAddress;
+import com.learning.web.util.SearchCriteria;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -13,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("mysql")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -31,13 +38,13 @@ class StudentRepositoryTest {
     void setup() {
         this.studentList = new ArrayList<>();
 
-        this.studentNameList = new ArrayList<String>( List.of("john", "ram", "som"));
+        this.studentNameList = new ArrayList<String>( List.of("john", "ram", "som", "sam", "kumar", "mohamed", "dany", "raju", "abdul", "ks"));
 
         int i = 0;
         for ( String stdName : studentNameList ) {
             Student student = new Student();
             student.setName(stdName);
-            student.setAge(30 + i);
+            student.setAge(15 + i);
             student.setGender("male" + i);
             student.setDob(LocalDate.now().plusDays(i));
 
@@ -58,10 +65,9 @@ class StudentRepositoryTest {
     @Test
     @Order(1)
     void testInsert() {
-
         assertTrue(studentRepository.findAll().size() == 0);
         studentList.stream().forEach( studentRepository::save );
-        assertTrue(studentRepository.findAll().size() == 3);
+        assertTrue(studentRepository.findAll().size() == 10);
 
         int i = 0;
         for ( String stdName : studentNameList ) {
@@ -84,22 +90,52 @@ class StudentRepositoryTest {
 
     @Test
     @Order(2)
-    void testUpdate() {
-        if ( studentList.size() > 1 ) {
-            studentList.get(1).setAge(50);
-            studentRepository.save(studentList.get(1));
-            assertTrue(studentList.get(1).getAge() == 50 );
-        }
+    void ageEqualsTest() {
+        StudentSpecification studentSpecification = new StudentSpecification(new SearchCriteria("age", ":", 15));
+        List<Student> results = studentRepository.findAll(Specification.where(studentSpecification));
+        assertTrue( results.size() == 1 );
     }
 
     @Test
     @Order(3)
-    void testDelete() {
-        boolean isStudentPresent = studentRepository.findById(1L).isPresent();
-        if ( isStudentPresent ) {
-            studentRepository.deleteById(1L);
-        } else {
-            assertTrue(studentRepository.findById(1L).isEmpty());
+    void ageBetweenTest() {
+        List<String> actualResultList = studentRepository.getStudentAgeBetween( 15, 18 );
+        List<String> expectedResultList = new ArrayList<String>( List.of("john", "ram", "som", "sam"));
+
+
+        assertTrue(actualResultList.size() == expectedResultList.size() && actualResultList.containsAll(expectedResultList) && expectedResultList.containsAll(actualResultList));
+    }
+
+    @Test
+    @Order(4)
+    void ageMaxTest() {
+        assertTrue(studentRepository.getAgePerStudent() == 24 );
+    }
+
+    @Test
+    @Order(5)
+    void testUpdate() {
+        if ( studentList.size() > 1 ) {
+            studentList.get(1).setAge(50);
+            studentRepository.save(studentList.get(1));
+            assertTrue(studentRepository.findAll().size() == 10 );
+            assertTrue(studentRepository.findById(2L).get().getAge() == 50);
         }
+    }
+
+    @Test
+    @Order(6)
+    void testDelete() {
+        assertTrue(studentRepository.findById(1L).isPresent());
+        studentRepository.deleteById(1L);
+        assertFalse(studentRepository.findById(1L).isPresent());
+    }
+
+    @Test
+    @Order(7)
+    void dataIntegrityExceptionTest() {
+        Exception exception = Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            studentRepository.save(new Student());
+        });
     }
 }

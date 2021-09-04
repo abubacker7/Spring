@@ -17,7 +17,7 @@ public class StudentAddress {
 
     @Id
     @Column(name = "address_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
 
     @Column(name = "flat_no", nullable = false, length = 10)

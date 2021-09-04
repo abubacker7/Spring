@@ -1,6 +1,7 @@
 package com.learning.model;
 
 import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,10 +13,11 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "student")
+//@EnableAutoConfiguration
 public class Student {
     @Id
     @Column(name = "roll_no")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rollNo;
 
     @Column(name = "name", nullable = false, length = 100)
