@@ -1,38 +1,38 @@
 package com.learning.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
+@Table(name = "student")
+//@EnableAutoConfiguration
 public class Student {
-
     @Id
-    Integer id;
+    @Column(name = "roll_no")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long rollNo;
 
-    String name;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    public Student(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @Column(name = "age", nullable = false, length = 10)
+    private int age;
 
-    public Integer getId() {
-        return id;
-    }
+    @Column(name = "gender", nullable = false, length = 10)
+    private String gender;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(name = "dob", nullable = false, length = 50)
+    private LocalDate dob;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Student() {
-
-    }
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private StudentAddress studentAddress;
 }

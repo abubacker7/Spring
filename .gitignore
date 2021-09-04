@@ -6,6 +6,7 @@ Learning.iml
 .DS_Store
 src/.DS_Store
 src/main/.DS_Store
+spring.iml
 
 # Compiled class file
 *.class
