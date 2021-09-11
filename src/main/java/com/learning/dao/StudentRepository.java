@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
+public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
 
     @Query(value = "SELECT max(age) FROM Student")
     Integer getAgePerStudent();
